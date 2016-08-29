@@ -5,33 +5,38 @@
 <html>
 <head runat="server">
  <title>Gráficos</title>
-<link href="css/base.css" rel="stylesheet" type="text/css">
+ <!-- CSS -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ <link href="css/base.css" rel="stylesheet" type="text/css">
+ <!-- JavaScript-->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script src="js/jquery-1.8.2.js" type="text/javascript"></script>
- <script src="js/loader.js"       type="text/javascript"></script>
- <script src="js/jsapi.js"        type="text/javascript"></script>
+ <script src="js/loader.js" type="text/javascript"></script>
+ <script src="js/jsapi.js" type="text/javascript"></script>
  <script type="text/javascript">
-//Carrega os pacotes de gráficos do Google
+  //Carrega os pacotes de gráficos do Google
   google.load('visualization', '1', { packages: ['corechart'] });
   google.load('visualization', '1', { packages: ['gauge'] });
   google.load('visualization', '1', { packages: ['table'] });
-  google.load('visualization', '1', { packages: ["geomap"] });
+  google.load('visualization', '1', { packages: ["map"] });
  </script>
- 
+
  <script type="text/javascript">
   // Resgata a informação POST em formato Json e depois chama a função drawComboBox e drawChart
   $(function () {
-   $.ajax({ type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}', success:
-    function (response) {
+   $.ajax({
+    type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}', success:
+     function (response) {
       drawCombobox(response.d);
       drawchart(response.d);
-    },
+     },
     error:
      function () {
-     alert("Erro ao carregar dados! Tente novamente.");
-    }
+      alert("Erro ao carregar dados! Tente novamente.");
+     }
    });
   })
-  
+
   //Função Contrói os gráficos
   function drawchart(dataValues) {
 
@@ -46,7 +51,7 @@
     //condição SE verifica qual dropbox esta selecionado no momento
     if (dataValues[i].NomePais.trim() == Filtro.value.trim() || Filtro.value.trim() == "todos") {
      data.addRow([dataValues[i].NomePais, dataValues[i].Total]);
-    } else {}
+    } else { }
    }
    // Monta a visualização do Google Chart Gauge
    var columnOption = { title: "Gráfico de Coluna" }
@@ -184,7 +189,7 @@
    // Monta o visualização do Google Chart Map
    var mapOption = { title: "Geolocalização", mapType: 'Normal' }
    var grafico8;
-   grafico8 = new google.visualization.Geomap(document.getElementById('map'));
+   grafico8 = new google.visualization.Map(document.getElementById('map'));
    grafico8.draw(data8, mapOption);
 
    //-----------------------------
@@ -206,20 +211,68 @@
 </head>
 <body>
  <form id="form1" runat="server">
-  <h1>Testando os Gráficos</h1>
-  <label for="Selecione o cidadão">Selecione o cidadão</label>
-  <select id="Filtro" onchange="filtrando()"></select>
-  <input id="BtLimpar" type="submit" accesskey="d" onclick="history.go(0)" value="&#xE716">
-  <hr />
-  <div id="gauge"   style="width: 30%; position:relative; float:left; height:150px;"></div>
-  <div id="tabela"  style="width: 16%; position:relative; float:left; height:150px; padding-left: 3%;"></div>
-  <div id="barra"   style="width: 50%; position:relative; float:left;"></div>
-  <div id="linha"   style="width: 50%; position:relative; float:left;"></div>
-  <div id="pizza"   style="width: 50%; position:relative; float:left;"></div>
-  <div id="scatter" style="width: 50%; position:relative; float:left;"></div>
-  <div id="bubble"  style="width: 50%; position:relative; float:left;"></div>
-  <div id="map"     style="width: 50%; position:relative; float:left;"></div>
+  <div class="navbar navbar-default navbar-fixed-top hidden-print">
+   <div class="container-fluid">
+    <div class="navbar-header">
+     <a class="navbar-brand no-wrap" href="http://201.18.84.42:8080/dashboard" tabindex="-1">Report</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+     <div class="form-group">
+      <label for="id_quebra" class="sr-only">Quebra</label>
+      <select id="id_quebra" name="id" class="form-control" required>
+       <!-- Código Inserido pelo back end -------------------------->
+       <option value="">Carteira / Quebra</option>
+       <!----------------------------------------------------------->
+      </select>
+     </div>
+
+     <div class="form-group">
+      <label for="data" class="sr-only">Data</label>
+      <select id="data" name="data" class="form-control">
+       <!-- Código Inserido pelo back end -------------------------->
+       <option value="">xx/xx/xxxx</option>
+       <!----------------------------------------------------------->
+      </select>
+     </div>
+     <button type="submit" class="btn btn-primary">atualizar</button>
+    </div>
+   </div>
+  </div>
  </form>
+ <div class="col-xs-12 col-lg-10 col-lg-offset-1">
+  <div class="page-header">
+   <!-- Código Inserido pelo back end -------------------------->
+   <h1>Hora a Hora
+    <small class="text-muted">ADT - TODAS</small>
+    <small class="text-muted">( 29/08/2016 )</small>
+   </h1>
+  </div>
+  <p class="text-muted text-right">última atualização em 29/08/2016 às 17h48</p>
+   <!----------------------------------------------------------->
+  <ul id="abas" class="nav nav-tabs hidden-print">
+   <li role="presentation" class="active"><a href="#">Dashboard</a></li>
+   <li role="presentation">
+    <a href="#">
+     <span class="hidden-xs">Operadores</span>
+     <span class="visible-xs-inline">Operad.</span>
+    </a>
+   </li>
+   <li role="presentation" >
+    <a href="#">
+     <span class="hidden-xs">Finalizações do dia</span>
+    </a>
+   </li>
+  </ul>
+  <div class="panel-body">
+   <!-- Painel Dashboard -------------------------------------------- -->
+  </div>
+  <div class="panel-footer text-center hidden-print">
+   <div class="btn-group btn-group-sm" data-toggle="buttons">
+
+   </div>
+  </div>
+ </div>
 </body>
 </html>
 
@@ -240,4 +293,4 @@
        }
   })
  }
- </script>
+</script>

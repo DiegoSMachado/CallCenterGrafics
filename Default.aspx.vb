@@ -12,7 +12,7 @@ Partial Class _Default
   Dim con As NpgsqlConnection = New NpgsqlConnection(Conexao)
   con.Open()
   'Dim cmd As String = "SELECT nome, total, idade FROM public.dadosgraficos ORDER BY total desc"
-  Dim cmd As String = "SELECT nome, total, idade, latitude, longitude FROM public.dadosgraficos ORDER BY total desc"
+  Dim cmd As String = "SELECT nome, total, idade FROM public.dadosgraficos ORDER BY total desc"
   Dim da As Npgsql.NpgsqlDataAdapter = New NpgsqlDataAdapter(cmd, con)
   da.Fill(dt)
   con.Close()
@@ -23,8 +23,6 @@ Partial Class _Default
    details.NomePais = dtrow(0).ToString().Trim()
    details.Total = Convert.ToInt32(dtrow(1))
    details.Idade = Convert.ToInt32(dtrow(2))
-   details.Latitude = dtrow(3).ToString().Trim()
-   details.Longitude = dtrow(4).ToString().Trim()
    listaDados.Add(details)
   Next
   Return listaDados
@@ -35,8 +33,7 @@ Public Class DadosDetalhes
  Public Property NomePais() As String
  Public Property Total() As Integer
  Public Property Idade() As Integer
- Public Property Latitude() As Integer
- Public Property Longitude() As Integer
+
 End Class
 
 
