@@ -28,8 +28,8 @@
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}',
     success:
      function (response) {
-      alert("Alerta: Dados Recebidos");
-      drawchart(response.d);
+      //alert("Alerta: Dados Recebidos");
+      drawgauge1(response.d);
      },
     error:
      function () {
@@ -39,18 +39,18 @@
   })
 
   //Função Contrói os gráficos
-  function drawchart(dataValues) {
+  function drawgauge1(dataValues) {
    // --- Gráfico Relogio -------------------------
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
-   alert(dataValues[0].alo_acionamento);
+   //alert(dataValues[0].alo_acionamento + " | " + dataValues[0].cpc_alo + " | " + dataValues[0].venda_cpc);
    // Construção das colunas do DataTable
-   data2.addColumn('number', 'alo');
-   alert('1');
-   data2.addColumn('number', 'cpc');
-   alert('2');
-   data2.addColumn('number', 'venda');
-   alert('3');
+   data2.addColumn('number', 'alo/acionamento');
+   //alert('1');
+   data2.addColumn('number', 'cpc/alo');
+   //alert('2');
+   data2.addColumn('number', 'venda/cpc');
+   //alert('3');
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_alo, dataValues[0].venda_cpc]);
    var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
    // Monta a visualização do Google Chart Gauge
@@ -58,9 +58,29 @@
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
   }
+  function drawgauge2(dataValues) {
+   // --- Gráfico Relogio -------------------------
+   // Popula Dados ao Google DataTable
+   var data2 = new google.visualization.DataTable();
+   //alert(dataValues[0].alo_acionamento + " | " + dataValues[0].cpc_alo + " | " + dataValues[0].venda_cpc);
+   // Construção das colunas do DataTable
+   data2.addColumn('number', 'alo/acionamento');
+   //alert('1');
+   data2.addColumn('number', 'cpc/acionamento');
+   //alert('2');
+   data2.addColumn('number', 'venda/acionamento');
+   //alert('3');
+   data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
+   var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
+   // Monta a visualização do Google Chart Gauge
+   var grafico2;
+   grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
+   grafico2.draw(data2, gaugeOptions);
+   waitingDialog.hide();
+  }
  </script>
 </head>
-<body>
+<body onload="  waitingDialog.show('Carregando os dados', { dialogSize: 'sm', progressType: 'warning' });">
  <form id="form1" runat="server">
   <div class="navbar navbar-default navbar-fixed-top hidden-print">
    <div class="container-fluid">
@@ -118,14 +138,17 @@
   </ul>
   <div class="panel-body">
    <!-- Painel Dashboard -------------------------------------------- -->
-  <div id="gauge" class="panel-footer text-center hidden-print">oi</div>
-  <div class="btn-group btn-group-sm" data-toggle="buttons"></div>
+   <div class="panel">
+    <div id="gauge" class="center-block"></div>
+    <div class="panel-footer text-center hidden-print">
+
+     <div class="btn-group btn-group-sm" data-toggle="buttons">
+      <button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativo</button>
+      <button type="button" class="btn btn-default" onclick="Reloadgauge2()">Total</button>
+     </div>
+    </div>
+   </div>
   </div>
-
-
-   <div id="error" class="alert-danger">Alerta:</div>
- </div>
-
 </body>
 </html>
 
@@ -133,7 +156,7 @@
 <script>
  // --- Função filtra dropdox --------------------------------
  // Reconstrói somente os gráficos não alterando o Dropbox
- function filtrando() {
+ function Reloadgauge1() {
   $.ajax({
    type: 'POST',
    dataType: 'json',
@@ -142,7 +165,20 @@
    data: '{}',
    success:
        function (response) {
-        drawchart(response.d);
+        drawgauge1(response.d);
+       }
+  })
+ }
+ function Reloadgauge2() {
+  $.ajax({
+   type: 'POST',
+   dataType: 'json',
+   contentType: 'application/json',
+   url: 'Default.aspx/GetDadosGrafico',
+   data: '{}',
+   success:
+       function (response) {
+        drawgauge2(response.d);
        }
   })
  }

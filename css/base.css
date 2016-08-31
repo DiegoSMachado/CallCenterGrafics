@@ -28,3 +28,8 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#gauge {
+ min-height:200px;
+ max-width:600px;
+}
