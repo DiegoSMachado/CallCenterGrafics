@@ -33,24 +33,34 @@
      },
     error:
      function () {
-      alert("Erro ao carregar dados! Tente novamente.");
+      alert("Erro ao carregar o Relógio! Tente novamente.");
+     }
+   });
+   $.ajax({
+    type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
+    success:
+     function (response) {
+      //alert("Alerta: Dados Recebidos");
+      drawChartcolunm(response.d);
+     },
+    error:
+     function () {
+      alert("Erro ao carregar Barra e a tabela! Tente novamente.");
      }
    });
   })
 
-  //Função Contrói os gráficos
+  // --- Gráfico Relogio 1 -------------------------
   function drawgauge1(dataValues) {
-   // --- Gráfico Relogio -------------------------
+   panel.innerHTML =  '<div id="gauge" class="center-block"></div>'
+   panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
    //alert(dataValues[0].alo_acionamento + " | " + dataValues[0].cpc_alo + " | " + dataValues[0].venda_cpc);
    // Construção das colunas do DataTable
    data2.addColumn('number', 'alo/acionamento');
-   //alert('1');
    data2.addColumn('number', 'cpc/alo');
-   //alert('2');
    data2.addColumn('number', 'venda/cpc');
-   //alert('3');
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_alo, dataValues[0].venda_cpc]);
    var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
    // Monta a visualização do Google Chart Gauge
@@ -58,18 +68,18 @@
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
   }
+
+  // --- Gráfico Relogio 2 -------------------------
   function drawgauge2(dataValues) {
-   // --- Gráfico Relogio -------------------------
+   panel.innerHTML = '<div id="gauge" class="center-block"></div>'
+   panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
-   //alert(dataValues[0].alo_acionamento + " | " + dataValues[0].cpc_alo + " | " + dataValues[0].venda_cpc);
    // Construção das colunas do DataTable
    data2.addColumn('number', 'alo/acionamento');
-   //alert('1');
    data2.addColumn('number', 'cpc/acionamento');
-   //alert('2');
    data2.addColumn('number', 'venda/acionamento');
-   //alert('3');
+   // Populando a DataTable
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
    var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
    // Monta a visualização do Google Chart Gauge
@@ -78,6 +88,25 @@
    grafico2.draw(data2, gaugeOptions);
    waitingDialog.hide();
   }
+
+  // --- Gráfico Misto (barra x coluna) --------
+  function colunm(dataValues) {
+   // Popula Dados ao Google DataTable
+   var data3 = new google.visualization.DataTable();
+   // Construção das colunas do DataTable
+   data3.addColumn('number', 'alo/acionamento');
+   data3.addColumn('number', 'cpc/acionamento');
+   data3.addColumn('number', 'venda/acionamento');
+   // Populando a DataTable
+   data3.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
+   var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
+   // Monta a visualização do Google Chart Gauge
+   var grafico3;
+   grafico3 = new google.visualization.ComboChart(document.getElementById('gauge'));
+   grafico3.draw(data3, gaugeOptions);
+   waitingDialog.hide();
+  }
+
  </script>
 </head>
 <body onload="  waitingDialog.show('Carregando os dados', { dialogSize: 'sm', progressType: 'warning' });">
@@ -138,16 +167,9 @@
   </ul>
   <div class="panel-body">
    <!-- Painel Dashboard -------------------------------------------- -->
-   <div class="panel">
-    <div id="gauge" class="center-block"></div>
-    <div class="panel-footer text-center hidden-print">
-
-     <div class="btn-group btn-group-sm" data-toggle="buttons">
-      <button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativo</button>
-      <button type="button" class="btn btn-default" onclick="Reloadgauge2()">Total</button>
-     </div>
-    </div>
+   <div id="panel" class="panel">
    </div>
+  </div>
   </div>
 </body>
 </html>
