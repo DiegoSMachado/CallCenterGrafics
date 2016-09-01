@@ -6,8 +6,8 @@
 <head runat="server">
  <title>Gráficos</title>
  <!-- CSS -->
- <link rel="stylesheet" href="css/bootstrap.min.css">
- <link href="css/base.css" rel="stylesheet" type="text/css">
+ <link href="css/bootstrap.min.css" rel="stylesheet">
+ <link href="css/base.css" rel="stylesheet">
  <!-- JavaScript-->
  <script src="js/bootstrap.min.js"></script>
  <script src="js/jquery-1.8.2.js" type="text/javascript"></script>
@@ -38,7 +38,9 @@
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
     success:
      function (response) {
+      ultimaAtualizao(response.d);
       drawcolunm(response.d);
+      drawtable(response.d);
      },
     error:
      function () {
@@ -46,6 +48,12 @@
      }
    });
   })
+
+  function ultimaAtualizao(dataValues) {
+   i = dataValues.length - 1;
+   alert(dataValues[323].dt_referencia);
+   ultimaatual.innerHTML = 'última atualização em ' + dataValues[i].dt_referencia + ' às ' + dataValues[i].hr_referencia +' horas';
+  }
 
   // --- Gráfico Relogio 1 -------------------------
   function drawgauge1(dataValues) {
@@ -89,7 +97,7 @@
   // --- Gráfico Misto (barra x coluna) --------
   function drawcolunm(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   panel.innerHTML += '<div id="combo" class="center-block"></div>'
+   panel.innerHTML += '<div id="combo" class="center-block combo" style="margin-top: 40px;"></div>'
    var data3 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
    data3.addColumn('string', 'Hora');
@@ -109,7 +117,42 @@
    grafico3.draw(data3, comboOptions);
   }
 
-
+  // --- Tabela  ---------------------------------------
+  function drawtable(dataValues) {
+   //Insere os botoes e divs adicionais no painel
+   panel.innerHTML += '<div id="tabela1" class="center-block tabela1"></div>'
+   var data4 = new google.visualization.DataTable();
+   // Construção das colunas do DataTable
+   data4.addColumn('string', 'Hora');
+   data4.addColumn('number', 'Acionamentos');
+   data4.addColumn('number', 'Alô');
+   data4.addColumn('number', 'Alô /Acion.');
+   data4.addColumn('number', 'CPC');
+   data4.addColumn('number', 'CPC/ Alô');
+   data4.addColumn('number', 'Venda');
+   data4.addColumn('number', 'Venda/ CPC');
+   // Populando a DataTable
+   for (var i = 0; i < dataValues.length; i++) {
+    //condição SE verifica qual dropbox esta selecionado no momento
+    if (dataValues[i].dt_referencia == '2016-08-30') {
+     data4.addRow([
+          dataValues[i].hr_referencia, 
+          dataValues[i].tot_acionamento, 
+          dataValues[i].tot_alo, 
+          dataValues[i].alo_acionamento, 
+          dataValues[i].cpc_alo, 
+          dataValues[i].venda_cpc, 
+          dataValues[i].cpc_acionamento, 
+          dataValues[i].venda_acionamento
+     ]);
+    } else { }
+   }
+   // Monta a visualização do Google Chart Gauge   
+   var comboOptions = { width: '100%', height: '100%' };
+   var grafico4;
+   grafico4 = new google.visualization.Table(document.getElementById('tabela1'));
+   grafico4.draw(data4, comboOptions);
+  }
  </script>
 </head>
 <body>
@@ -152,7 +195,7 @@
     <small class="text-muted">( 29/08/2016 )</small>
    </h1>
   </div>
-  <p class="text-muted text-right">última atualização em 29/08/2016 às 17h48</p>
+  <p id="ultimaatual" class="text-muted text-right"></p>
   <!----------------------------------------------------------->
   <ul id="abas" class="nav nav-tabs hidden-print">
    <li role="presentation" class="active"><a href="#">Dashboard</a></li>
@@ -193,12 +236,13 @@
         drawgauge1(response.d);
        }
   })
-  //-----------------------------------------------------------------------------------------------------------------
   $.ajax({
    type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
    success:
     function (response) {
+     ultimaAtualizao(response.d);
      drawcolunm(response.d);
+     drawtable(response.d);
     },
    error:
     function () {
@@ -218,12 +262,13 @@
         drawgauge2(response.d);
        }
   })
-  //-----------------------------------------------------------------------------------------------------------------
   $.ajax({
    type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
    success:
     function (response) {
+     ultimaAtualizao(response.d);
      drawcolunm(response.d);
+     drawtable(response.d);
     },
    error:
     function () {
