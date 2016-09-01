@@ -62,6 +62,7 @@ Partial Class _Default
 
  End Class
 
+ <WebMethod>
  Public Shared Function GetDadosGraficoB() As List(Of DadosDetalhesB)
   Dim data As String = "2016/08/29"
   Dim dt As New DataTable()
@@ -71,7 +72,7 @@ Partial Class _Default
   con.Open()
   Dim cmd As String
   cmd = "SELECT dt_referencia, hr_referencia, tot_alo, tot_cpc, tot_venda, alo_acionamento, "
-  cmd += "cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento"
+  cmd += "cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento "
   cmd += "FROM indicadores.tb_indicadores;"
   Dim da As Npgsql.NpgsqlDataAdapter = New NpgsqlDataAdapter(cmd, con)
   da.Fill(dt)
@@ -81,7 +82,7 @@ Partial Class _Default
   For Each dtrow As DataRow In dt.Rows
    Dim details As New DadosDetalhesB()
    details.dt_referencia = dtrow(0).ToString()
-   details.hr_referencia = dtrow(1).ToInt32()
+   details.hr_referencia = dtrow(1).ToString()
    details.tot_alo = Convert.ToInt32(dtrow(2))
    details.tot_cpc = Convert.ToInt32(dtrow(3))
    details.tot_venda = Convert.ToInt32(dtrow(4))

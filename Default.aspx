@@ -18,17 +18,15 @@
   google.load('visualization', '1', { packages: ['corechart'] });
   google.load('visualization', '1', { packages: ['gauge'] });
   google.load('visualization', '1', { packages: ['table'] });
-  google.load('visualization', '1', { packages: ["map"] });
+  google.load('visualization', '1', { packages: ['map'] });
  </script>
 
  <script type="text/javascript">
-  // Resgata a informação POST em formato Json e depois chama a função drawComboBox e drawChart
   $(function () {
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}',
     success:
      function (response) {
-      //alert("Alerta: Dados Recebidos");
       drawgauge1(response.d);
      },
     error:
@@ -36,12 +34,12 @@
       alert("Erro ao carregar o Relógio! Tente novamente.");
      }
    });
+   //-----------------------------------------------------------------------------------------------------------------
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
     success:
-     function (response) {
-      //alert("Alerta: Dados Recebidos");
-      drawChartcolunm(response.d);
+     function (responseB) {
+      drawChartcolunm(responseB.d);
      },
     error:
      function () {
@@ -98,8 +96,8 @@
    data3.addColumn('number', 'cpc/acionamento');
    data3.addColumn('number', 'venda/acionamento');
    // Populando a DataTable
-   data3.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
-   var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
+   data3.addRow([dataValues[0].hr_referencia, dataValues[0].tot_venda, dataValues[0].cpc_alo]);
+   var gaugeOptions = {    title: 'Monthly Coffee Production by Country',    vAxis: { title: 'Cups' },    hAxis: {title:'Month'},    seriesType:'bars',    series: {5:{ type: 'line' } }};
    // Monta a visualização do Google Chart Gauge
    var grafico3;
    grafico3 = new google.visualization.ComboChart(document.getElementById('gauge'));
