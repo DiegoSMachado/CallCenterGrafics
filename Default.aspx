@@ -18,7 +18,6 @@
   google.load('visualization', '1', { packages: ['corechart'] });
   google.load('visualization', '1', { packages: ['gauge'] });
   google.load('visualization', '1', { packages: ['table'] });
-  google.load('visualization', '1', { packages: ['map'] });
  </script>
 
  <script type="text/javascript">
@@ -38,8 +37,8 @@
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
     success:
-     function (responseB) {
-      drawChartcolunm(responseB.d);
+     function (response) {
+      drawcolunm(response.d);
      },
     error:
      function () {
@@ -50,17 +49,17 @@
 
   // --- Gráfico Relogio 1 -------------------------
   function drawgauge1(dataValues) {
-   panel.innerHTML =  '<div id="gauge" class="center-block"></div>'
+   //Insere os botoes e divs adicionais no painel
+   panel.innerHTML = '<div id="gauge" class="center-block"></div>'
    panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
-   //alert(dataValues[0].alo_acionamento + " | " + dataValues[0].cpc_alo + " | " + dataValues[0].venda_cpc);
    // Construção das colunas do DataTable
    data2.addColumn('number', 'alo/acionamento');
    data2.addColumn('number', 'cpc/alo');
    data2.addColumn('number', 'venda/cpc');
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_alo, dataValues[0].venda_cpc]);
-   var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
+   var gaugeOptions = { min: 0, max: 100, minorTicks: 5 };
    // Monta a visualização do Google Chart Gauge
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
@@ -69,6 +68,7 @@
 
   // --- Gráfico Relogio 2 -------------------------
   function drawgauge2(dataValues) {
+   //Insere os botoes e divs adicionais no painel
    panel.innerHTML = '<div id="gauge" class="center-block"></div>'
    panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
    // Popula Dados ao Google DataTable
@@ -79,35 +79,40 @@
    data2.addColumn('number', 'venda/acionamento');
    // Populando a DataTable
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
-   var gaugeOptions = { min: 0, max: 100, yellowFrom: 60, yellowTo: 90, redFrom: 90, redTo: 100, minorTicks: 5 };
+   var gaugeOptions = { min: 0, max: 100, minorTicks: 5 };
    // Monta a visualização do Google Chart Gauge
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
-   waitingDialog.hide();
   }
 
   // --- Gráfico Misto (barra x coluna) --------
-  function colunm(dataValues) {
-   // Popula Dados ao Google DataTable
+  function drawcolunm(dataValues) {
+   //Insere os botoes e divs adicionais no painel
+   panel.innerHTML += '<div id="combo" class="center-block"></div>'
    var data3 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
-   data3.addColumn('number', 'alo/acionamento');
-   data3.addColumn('number', 'cpc/acionamento');
-   data3.addColumn('number', 'venda/acionamento');
+   data3.addColumn('string', 'Hora');
+   data3.addColumn('number', 'Vendas');
+   data3.addColumn('number', 'CPC/Alô');
    // Populando a DataTable
-   data3.addRow([dataValues[0].hr_referencia, dataValues[0].tot_venda, dataValues[0].cpc_alo]);
-   var gaugeOptions = {    title: 'Monthly Coffee Production by Country',    vAxis: { title: 'Cups' },    hAxis: {title:'Month'},    seriesType:'bars',    series: {5:{ type: 'line' } }};
-   // Monta a visualização do Google Chart Gauge
+   for (var i = 0; i < dataValues.length; i++) {
+    //condição SE verifica qual dropbox esta selecionado no momento
+    if (dataValues[i].dt_referencia == '2016-08-30') {
+     data3.addRow([dataValues[i].hr_referencia, dataValues[i].tot_venda, dataValues[i].cpc_alo]);
+    } else {}
+   }
+   // Monta a visualização do Google Chart Gauge   
+   var comboOptions = { title: 'Vendas × CPC/Alô', vAxis: { title: 'Qt' }, hAxis: { title: 'Horas' }, seriesType: 'bars', series: {1: {type: 'line'}}};
    var grafico3;
-   grafico3 = new google.visualization.ComboChart(document.getElementById('gauge'));
-   grafico3.draw(data3, gaugeOptions);
-   waitingDialog.hide();
+   grafico3 = new google.visualization.ComboChart(document.getElementById('combo'));
+   grafico3.draw(data3, comboOptions);
   }
+
 
  </script>
 </head>
-<body onload="  waitingDialog.show('Carregando os dados', { dialogSize: 'sm', progressType: 'warning' });">
+<body>
  <form id="form1" runat="server">
   <div class="navbar navbar-default navbar-fixed-top hidden-print">
    <div class="container-fluid">
@@ -188,6 +193,18 @@
         drawgauge1(response.d);
        }
   })
+  //-----------------------------------------------------------------------------------------------------------------
+  $.ajax({
+   type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
+   success:
+    function (response) {
+     drawcolunm(response.d);
+    },
+   error:
+    function () {
+     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
+    }
+  });
  }
  function Reloadgauge2() {
   $.ajax({
@@ -201,5 +218,17 @@
         drawgauge2(response.d);
        }
   })
+  //-----------------------------------------------------------------------------------------------------------------
+  $.ajax({
+   type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
+   success:
+    function (response) {
+     drawcolunm(response.d);
+    },
+   error:
+    function () {
+     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
+    }
+  });
  }
 </script>

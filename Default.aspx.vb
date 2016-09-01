@@ -17,22 +17,22 @@ Partial Class _Default
   con.Open()
   Dim cmd As String
   cmd="  SELECT a.dt_referencia"
-  cmd += "  ,ROUND((CAST(a.tot_alo AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as alo_acionamento"
-  cmd +="  ,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.tot_alo AS NUMERIC)*100),2)       as cpc_alo"
-  cmd += "  ,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.tot_cpc AS NUMERIC)*100),2)     as venda_cpc"
-  cmd +="  ,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as cpc_acionamento"
-  cmd += "  ,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as venda_acionamento"
-  cmd +="   FROM("
-  cmd += "   SELECT "
-  cmd += "   dt_referencia"
-  cmd += "  ,SUM(tot_alo)   As tot_alo"
-  cmd += "  ,SUM(tot_cpc)    As tot_cpc"
-  cmd += "  ,SUM(tot_venda) As tot_venda"
-  cmd += "  ,COUNT(1)       As qt_chamadas"
-  cmd +="   FROM indicadores.tb_indicadores"
-  cmd+="   GROUP BY CAST(dt_referencia As Date)"
-  cmd+="  ) a "
-  cmd+="   ORDER BY a.dt_referencia"
+  cmd += ",ROUND((CAST(a.tot_alo AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as alo_acionamento"
+  cmd += ",ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.tot_alo AS NUMERIC)*100),2)       as cpc_alo"
+  cmd += ",ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.tot_cpc AS NUMERIC)*100),2)     as venda_cpc"
+  cmd += ",ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as cpc_acionamento"
+  cmd += ",ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as venda_acionamento"
+  cmd += " FROM("
+  cmd += " SELECT "
+  cmd += " dt_referencia"
+  cmd += ",SUM(tot_alo)         As tot_alo"
+  cmd += ",SUM(tot_cpc)         As tot_cpc"
+  cmd += ",SUM(tot_venda)       As tot_venda"
+  cmd += ",SUM(tot_acionamento) As qt_chamadas"
+  cmd += " FROM indicadores.tb_indicadores"
+  cmd += " GROUP BY CAST(dt_referencia As Date)"
+  cmd += " ) a "
+  cmd += " ORDER BY a.dt_referencia"
   Dim da As Npgsql.NpgsqlDataAdapter = New NpgsqlDataAdapter(cmd, con)
   da.Fill(dt)
   con.Close()
@@ -71,9 +71,9 @@ Partial Class _Default
   Dim con As NpgsqlConnection = New NpgsqlConnection(Conexao)
   con.Open()
   Dim cmd As String
-  cmd = "SELECT dt_referencia, hr_referencia, tot_alo, tot_cpc, tot_venda, alo_acionamento, "
-  cmd += "cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento "
-  cmd += "FROM indicadores.tb_indicadores;"
+  cmd = "SELECT CAST(dt_referencia As VARCHAR), hr_referencia, tot_alo, tot_cpc, tot_venda,tot_acionamento, alo_acionamento, "
+  cmd += " cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento"
+  cmd += " FROM indicadores.tb_indicadores"
   Dim da As Npgsql.NpgsqlDataAdapter = New NpgsqlDataAdapter(cmd, con)
   da.Fill(dt)
   con.Close()
@@ -86,11 +86,12 @@ Partial Class _Default
    details.tot_alo = Convert.ToInt32(dtrow(2))
    details.tot_cpc = Convert.ToInt32(dtrow(3))
    details.tot_venda = Convert.ToInt32(dtrow(4))
-   details.alo_acionamento = Convert.ToSingle(dtrow(5))
-   details.cpc_alo = Convert.ToSingle(dtrow(6))
-   details.venda_cpc = Convert.ToSingle(dtrow(7))
-   details.cpc_acionamento = Convert.ToSingle(dtrow(8))
-   details.venda_acionamento = Convert.ToSingle(dtrow(9))
+   details.tot_acionamento = Convert.ToInt32(dtrow(5))
+   details.alo_acionamento = Convert.ToSingle(dtrow(6))
+   details.cpc_alo = Convert.ToSingle(dtrow(7))
+   details.venda_cpc = Convert.ToSingle(dtrow(8))
+   details.cpc_acionamento = Convert.ToSingle(dtrow(9))
+   details.venda_acionamento = Convert.ToSingle(dtrow(10))
 
    listaDadosB.Add(details)
   Next
@@ -103,9 +104,10 @@ End Class
 Public Class DadosDetalhesB
  Public Property dt_referencia() As String
  Public Property hr_referencia() As String
- Public Property tot_alo() As String
- Public Property tot_cpc() As String
- Public Property tot_venda() As String
+ Public Property tot_alo() As Single
+ Public Property tot_cpc() As Single
+ Public Property tot_venda() As Single
+ Public Property tot_acionamento() As Single
  Public Property alo_acionamento() As Single
  Public Property cpc_alo() As Single
  Public Property venda_cpc() As Single
