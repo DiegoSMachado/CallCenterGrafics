@@ -64,7 +64,7 @@
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
-   data2.addColumn('number', 'alo/acionamento');
+   data2.addColumn('number', 'alo/acion.');
    data2.addColumn('number', 'cpc/alo');
    data2.addColumn('number', 'venda/cpc');
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_alo, dataValues[0].venda_cpc]);
@@ -73,7 +73,6 @@
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
-   $('svg g text:first', this.contentWindow.document || this.contentDocument).attr('font-size', 8);
   }
 
   // --- Gráfico Relogio 2 -------------------------
@@ -86,9 +85,9 @@
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
-   data2.addColumn('number', 'alo/acionamento');
-   data2.addColumn('number', 'cpc/acionamento');
-   data2.addColumn('number', 'venda/acionamento');
+   data2.addColumn('number', 'alo/acion.');
+   data2.addColumn('number', 'cpc/acion.');
+   data2.addColumn('number', 'venda/acion.');
    // Populando a DataTable
    data2.addRow([dataValues[0].alo_acionamento, dataValues[0].cpc_acionamento, dataValues[0].venda_acionamento]);
    var gaugeOptions = { min: 0, max: 100, minorTicks: 5 };
@@ -96,13 +95,12 @@
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
-   $('svg g text:first', this.contentWindow.document || this.contentDocument).attr('font-size', 8);
   }
 
   // --- Gráfico Misto (barra x coluna) --------
   function drawcolunm(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   panel.innerHTML += '<div id="combo" class="center-block combo" style="margin-top: 40px;"></div>'
+   panel.innerHTML += '<h3 class="titulo">Vendas × CPC/Alô</h3><div id="combo" class="comtitulo"></div>'
    var data3 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
    data3.addColumn('string', 'Hora');
@@ -118,7 +116,7 @@
     } else {}
    }
    // Monta a visualização do Google Chart Gauge   
-   var comboOptions = { title: 'Vendas × CPC/Alô', vAxis: { title: 'Qt' }, hAxis: { title: 'Horas' }, seriesType: 'bars', series: { 1: { type: 'line', curveType: 'function', pointSize: 3 } },  };
+   var comboOptions = {vAxis: { title: 'Qt' }, hAxis: { title: 'Horas' }, seriesType: 'bars', series: { 1: { type: 'line', curveType: 'function', pointSize: 3,color:'green' } }, legend: { position: 'bottom' }};
    var grafico3;
    grafico3 = new google.visualization.ComboChart(document.getElementById('combo'));
    grafico3.draw(data3, comboOptions);
@@ -145,17 +143,17 @@
      data4.addRow([
           'de ' + dataValues[i].hr_referencia + ' às ' + dataValues[i+1].hr_referencia,
           dataValues[i].tot_acionamento,
-          dataValues[i].tot_alo, 
-          dataValues[i].alo_acionamento, 
-          dataValues[i].cpc_alo, 
-          dataValues[i].venda_cpc, 
-          dataValues[i].cpc_acionamento, 
-          dataValues[i].venda_acionamento
+          dataValues[i].tot_alo,
+          { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
+          dataValues[i].tot_cpc,
+          { v: dataValues[i].cpc_alo, f: dataValues[i].cpc_alo + '%' },
+          dataValues[i].tot_venda,
+          { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' },
      ]);
     } else { }
    }
    // Monta a visualização do Google Chart Gauge   
-   var comboOptions = { width: '100%', height: '100%', showRowNumber: true, text: '15px' };
+   var comboOptions = {allowHtml: true, showRowNumber: false, width: '100%', height: '100%', showRowNumber: true, text: '15px' };
    var grafico4;
    grafico4 = new google.visualization.Table(document.getElementById('tabela1'));
    grafico4.draw(data4, comboOptions);
@@ -220,7 +218,7 @@
   </ul>
   <div class="panel-body">
    <!-- Painel Dashboard -------------------------------------------- -->
-   <div id="panel" class="panel">
+   <div id="panel" class="panel text-center">
    </div>
   </div>
   </div>
