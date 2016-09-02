@@ -16,7 +16,7 @@ Partial Class _Default
   Dim con As NpgsqlConnection = New NpgsqlConnection(Conexao)
   con.Open()
   Dim cmd As String
-  cmd="  SELECT a.dt_referencia"
+  cmd = "  SELECT CAST(a.dt_referencia AS VARCHAR)"
   cmd += ",ROUND((CAST(a.tot_alo AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as alo_acionamento"
   cmd += ",ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.tot_alo AS NUMERIC)*100),2)       as cpc_alo"
   cmd += ",ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.tot_cpc AS NUMERIC)*100),2)     as venda_cpc"
@@ -24,7 +24,7 @@ Partial Class _Default
   cmd += ",ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as venda_acionamento"
   cmd += " FROM("
   cmd += " SELECT "
-  cmd += " dt_referencia"
+  cmd += " CAST(dt_referencia AS DATE)"
   cmd += ",SUM(tot_alo)         As tot_alo"
   cmd += ",SUM(tot_cpc)         As tot_cpc"
   cmd += ",SUM(tot_venda)       As tot_venda"
@@ -40,7 +40,7 @@ Partial Class _Default
   Dim listaDados As New List(Of DadosDetalhes)()
   For Each dtrow As DataRow In dt.Rows
    Dim details As New DadosDetalhes()
-   details.dtreferencia = dtrow(0).ToString()
+   details.dt_referencia = dtrow(0).ToString()
    details.alo_acionamento = Convert.ToString(dtrow(1))
    details.cpc_alo = Convert.ToSingle(dtrow(2))
    details.venda_cpc = Convert.ToSingle(dtrow(3))
@@ -53,7 +53,7 @@ Partial Class _Default
  End Function
 
  Public Class DadosDetalhes
-  Public Property dtreferencia() As String
+  Public Property dt_referencia() As String
   Public Property alo_acionamento() As Single
   Public Property cpc_alo() As Single
   Public Property venda_cpc() As Single
@@ -64,7 +64,6 @@ Partial Class _Default
 
  <WebMethod>
  Public Shared Function GetDadosGraficoB() As List(Of DadosDetalhesB)
-  Dim data As String = "2016/08/29"
   Dim dt As New DataTable()
   Dim Conexao As String = "Server=localhost;Port=5432;UserId=postgres;Password=mktec;Database=Tecnocall"
   'Dim Conexao As String = "Server=192.168.0.62;Port=5432;UserId=mktec;Password=mktec;Database=Tecnocall"
