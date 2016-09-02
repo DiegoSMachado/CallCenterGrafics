@@ -51,15 +51,16 @@
 
   function ultimaAtualizao(dataValues) {
    i = dataValues.length - 1;
-   alert(dataValues[323].dt_referencia);
    ultimaatual.innerHTML = 'última atualização em ' + dataValues[i].dt_referencia + ' às ' + dataValues[i].hr_referencia +' horas';
   }
 
   // --- Gráfico Relogio 1 -------------------------
   function drawgauge1(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   panel.innerHTML = '<div id="gauge" class="center-block"></div>'
-   panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
+   if (document.getElementById("gauge") == null) {
+    panel.innerHTML = '<div id="gauge" class="center-block"></div>'
+    panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
+   } else { }
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
@@ -72,13 +73,16 @@
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
+   $('svg g text:first', this.contentWindow.document || this.contentDocument).attr('font-size', 8);
   }
 
   // --- Gráfico Relogio 2 -------------------------
   function drawgauge2(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   panel.innerHTML = '<div id="gauge" class="center-block"></div>'
-   panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
+   if (document.getElementById("gauge") == null) {
+    panel.innerHTML = '<div id="gauge" class="center-block"></div>'
+    panel.innerHTML += '<div class="panel-footer text-center hidden-print"><div class="btn-group btn-group-sm text-center" data-toggle="buttons"><button type="button" class="btn btn-default" onclick="Reloadgauge1()">Relativa</button><button type="button" class="btn btn-default" onclick="Reloadgauge2()">Esteira</button></div></div>'
+   } else { }
    // Popula Dados ao Google DataTable
    var data2 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
@@ -92,6 +96,7 @@
    var grafico2;
    grafico2 = new google.visualization.Gauge(document.getElementById('gauge'));
    grafico2.draw(data2, gaugeOptions);
+   $('svg g text:first', this.contentWindow.document || this.contentDocument).attr('font-size', 8);
   }
 
   // --- Gráfico Misto (barra x coluna) --------
@@ -102,16 +107,18 @@
    // Construção das colunas do DataTable
    data3.addColumn('string', 'Hora');
    data3.addColumn('number', 'Vendas');
+   data3.addColumn({type:'number', role: 'annotation' });
    data3.addColumn('number', 'CPC/Alô');
+   data3.addColumn({ type: 'number', role: 'annotation' });
    // Populando a DataTable
    for (var i = 0; i < dataValues.length; i++) {
     //condição SE verifica qual dropbox esta selecionado no momento
     if (dataValues[i].dt_referencia == '2016-08-30') {
-     data3.addRow([dataValues[i].hr_referencia, dataValues[i].tot_venda, dataValues[i].cpc_alo]);
+     data3.addRow([dataValues[i].hr_referencia, dataValues[i].tot_venda, dataValues[i].tot_venda, dataValues[i].cpc_alo, dataValues[i].cpc_alo]);
     } else {}
    }
    // Monta a visualização do Google Chart Gauge   
-   var comboOptions = { title: 'Vendas × CPC/Alô', vAxis: { title: 'Qt' }, hAxis: { title: 'Horas' }, seriesType: 'bars', series: {1: {type: 'line'}}};
+   var comboOptions = { title: 'Vendas × CPC/Alô', vAxis: { title: 'Qt' }, hAxis: { title: 'Horas' }, seriesType: 'bars', series: { 1: { type: 'line', curveType: 'function', pointSize: 3 } },  };
    var grafico3;
    grafico3 = new google.visualization.ComboChart(document.getElementById('combo'));
    grafico3.draw(data3, comboOptions);
@@ -133,11 +140,11 @@
    data4.addColumn('number', 'Venda/ CPC');
    // Populando a DataTable
    for (var i = 0; i < dataValues.length; i++) {
-    //condição SE verifica qual dropbox esta selecionado no momento
+    //condição SE verifica qual dropbox esta selecionado no momento {v: 7000,  f: '$7,000'}
     if (dataValues[i].dt_referencia == '2016-08-30') {
      data4.addRow([
-          dataValues[i].hr_referencia, 
-          dataValues[i].tot_acionamento, 
+          'de ' + dataValues[i].hr_referencia + ' às ' + dataValues[i+1].hr_referencia,
+          dataValues[i].tot_acionamento,
           dataValues[i].tot_alo, 
           dataValues[i].alo_acionamento, 
           dataValues[i].cpc_alo, 
@@ -148,7 +155,7 @@
     } else { }
    }
    // Monta a visualização do Google Chart Gauge   
-   var comboOptions = { width: '100%', height: '100%' };
+   var comboOptions = { width: '100%', height: '100%', showRowNumber: true, text: '15px' };
    var grafico4;
    grafico4 = new google.visualization.Table(document.getElementById('tabela1'));
    grafico4.draw(data4, comboOptions);
@@ -236,20 +243,8 @@
         drawgauge1(response.d);
        }
   })
-  $.ajax({
-   type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
-   success:
-    function (response) {
-     ultimaAtualizao(response.d);
-     drawcolunm(response.d);
-     drawtable(response.d);
-    },
-   error:
-    function () {
-     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
-    }
-  });
  }
+
  function Reloadgauge2() {
   $.ajax({
    type: 'POST',
@@ -262,18 +257,5 @@
         drawgauge2(response.d);
        }
   })
-  $.ajax({
-   type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
-   success:
-    function (response) {
-     ultimaAtualizao(response.d);
-     drawcolunm(response.d);
-     drawtable(response.d);
-    },
-   error:
-    function () {
-     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
-    }
-  });
  }
 </script>

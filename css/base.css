@@ -28,3 +28,14 @@
 #tabela1{
  margin-top: 40px;
 }
+
+
+  /* for gauge indicators text */
+  .gauge svg g text {
+    font-size: 18px;
+  }
+  /* for middle text */
+  .gauge svg g g text {
+    font-size: 15px;
+  }
+
