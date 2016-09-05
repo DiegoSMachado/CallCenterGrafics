@@ -7,6 +7,7 @@ dt_referencia      VARCHAR(10)
 ,tot_alo           INT
 ,tot_cpc           INT
 ,tot_venda         INT
+,tot_acionamento   INT
 ,alo_acionamento   NUMERIC(14,2)
 ,cpc_alo           NUMERIC(14,2)
 ,venda_cpc         NUMERIC(14,2)
@@ -19,6 +20,7 @@ INSERT INTO indicadores.tb_operadores
 SELECT a.dt_referencia
  ,a.cd_colaborador
  ,a.nm_colaborador
+ ,qt_chamadas as tot_acionamento
  ,tot_alo
  ,tot_cpc
  ,tot_venda
@@ -61,7 +63,7 @@ SELECT
  ,SUM(d.fgcontato)                AS tot_alo
  ,SUM(d.fgcpc)                    AS tot_cpc
  ,SUM(d.fgvenda)                  AS tot_venda
- ,COUNT(1)                      AS qt_chamadas
+ ,COUNT(1)                        AS qt_chamadas
 FROM dm_f_acionamento d
 LEFT JOIN er_a_agtcolaboradordia c
 on d.cdlogincolaborador = c.cdlogincolaborador

@@ -109,13 +109,13 @@
    data2.addColumn('number', 'cpc/acion.');
    data2.addColumn('number', 'venda/acion.');
    // Populando a DataTable
-   for (var i = 0; i < dataValues.length;i++){
-    if (dataValues[i].dt_referencia == data.value){
-      data2.addRow([
-           { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
-           { v: dataValues[i].cpc_acionamento, f: dataValues[i].cpc_acionamento + '%' },
-           { v: dataValues[i].venda_acionamento, f: dataValues[i].venda_acionamento + '%' }
-      ]);
+   for (var i = 0; i < dataValues.length; i++) {
+    if (dataValues[i].dt_referencia == data.value) {
+     data2.addRow([
+          { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
+          { v: dataValues[i].cpc_acionamento, f: dataValues[i].cpc_acionamento + '%' },
+          { v: dataValues[i].venda_acionamento, f: dataValues[i].venda_acionamento + '%' }
+     ]);
     }
    }
    // Monta a visualização do Google Chart Gauge
@@ -128,7 +128,7 @@
   // --- Gráfico Misto (barra x coluna) --------
   function drawcolunm(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   if(document.getElementById('combo') == null){
+   if (document.getElementById('combo') == null) {
     panel.innerHTML += '<h3 class="titulo">Vendas × CPC/Alô</h3><div id="combo" class="comtitulo"></div>'
    }
    var data3 = new google.visualization.DataTable();
@@ -161,7 +161,7 @@
   // --- Tabela  ---------------------------------------
   function drawtable(dataValues) {
    //Insere os botoes e divs adicionais no painel
-   if(document.getElementById('tabela1') == null){
+   if (document.getElementById('tabela1') == null) {
     panel.innerHTML += '<div id="tabela1" class="center-block tabela1"></div>'
    }
    var data4 = new google.visualization.DataTable();
@@ -177,17 +177,17 @@
    // Populando a DataTable
    for (var i = 0; i < dataValues.length; i++) {
     if (dataValues[i].dt_referencia == data.value) {
-     horapos = parseInt(dataValues[i].hr_referencia,10);
+     horapos = parseInt(dataValues[i].hr_referencia, 10);
      horapos++;
-    data4.addRow([
-          'de ' + dataValues[i].hr_referencia + ' às ' + horapos,
-          dataValues[i].tot_acionamento,
-          dataValues[i].tot_alo,
-          { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
-          dataValues[i].tot_cpc,
-          { v: dataValues[i].cpc_alo, f: dataValues[i].cpc_alo + '%' },
-          dataValues[i].tot_venda,
-          { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' },
+     data4.addRow([
+           'de ' + dataValues[i].hr_referencia + ' às ' + horapos,
+           dataValues[i].tot_acionamento,
+           dataValues[i].tot_alo,
+           { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
+           dataValues[i].tot_cpc,
+           { v: dataValues[i].cpc_alo, f: dataValues[i].cpc_alo + '%' },
+           dataValues[i].tot_venda,
+           { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' },
      ]);
     } else { }
    }
@@ -203,9 +203,47 @@
    grafico4.draw(data4, comboOptions);
   }
   //============================================================================================================================
-  // --- Popula última atualização ---------------------------------------------------------------------------------------------
-  function drawoperadores() {
+  // --- Constrói tabela operadores  -------------------------------------------------------------------------------------------
+  function drawoperadores(dataValues) {
+   //Insere os botoes e divs adicionais no painel
+   if (document.getElementById('tabela2') == null) {
+    panel.innerHTML = '<div id="tabela2" class="center-block"></div>'
+   }
+   var data5 = new google.visualization.DataTable();
+   // Construção das colunas do DataTable
+   data5.addColumn('string', 'Operador');
+   data5.addColumn('number', 'Acionamentos');
+   data5.addColumn('number', 'Alô');
+   data5.addColumn('number', 'Alô /Acion.');
+   data5.addColumn('number', 'CPC');
+   data5.addColumn('number', 'CPC/ Alô');
+   data5.addColumn('number', 'Venda');
+   data5.addColumn('number', 'Venda/ CPC');
+   // Populando a DataTable
+   for (var i = 0; i < dataValues.length; i++) {
+    if (dataValues[i].dt_referencia == data.value) {
+     data4.addRow([
+           dataValues[i].nm_colaborador,
+           dataValues[i].tot_acionamento,
+           dataValues[i].tot_alo,
+           { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
+           dataValues[i].tot_cpc,
+           { v: dataValues[i].cpc_alo, f: dataValues[i].cpc_alo + '%' },
+           dataValues[i].tot_venda,
+           { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' },
+     ]);
+    } else { }
+   }
+   // Monta a visualização do Google tabela   
+   var comboOptions = { allowHtml: true, showRowNumber: false, width: '100%', height: '100%', showRowNumber: true, text: '15px' };
+   var grafico5;
+   grafico5 = new google.visualization.Table(document.getElementById('tabela2'));
 
+   var formatter = new google.visualization.ColorFormat();
+   formatter.addRange(10, 0, 'lightgreen', 'lightred');
+   formatter.format(data5, 3); // O numero e referente a coluna
+
+   grafico5.draw(data5, comboOptions);
   }
  </script>
 </head>
@@ -219,12 +257,12 @@
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
-     <div class="form-group">
+<!--     <div class="form-group">
       <label for="id_quebra" class="sr-only">Quebra</label>
       <select id="id_quebra" name="id" class="form-control" required>
        <option value="">Carteira / Quebra</option>
       </select>
-     </div>
+     </div> -->
 
      <div class="form-group">
       <label for="data" class="sr-only">Data</label>
@@ -240,15 +278,15 @@
   <div class="page-header">
    <h1>Hora a Hora
     <small class="text-muted">ADT - TODAS</small>
-    <small id="dataselecionada" class="text-muted">(  )</small>
+    <small id="dataselecionada" class="text-muted">Carregando</small>
    </h1>
   </div>
   <p id="ultimaatual" class="text-muted text-right"></p>
   <ul id="abas" class="nav nav-tabs hidden-print">
    <li role="presentation" class="active"><a href="#">Dashboard</a></li>
    <li role="presentation">
-    <a href="#">
-     <span class="hidden-xs">Operadores</span>
+    <a onclick="operadoresselect()">
+     <span class="hidden-xs" onclick="operadoresselect()">Operadores</span>
      <span class="visible-xs-inline">Operad.</span>
     </a>
    </li>
@@ -269,7 +307,7 @@
 
 
 <script>
-//=========================================================================================
+ //=========================================================================================
  // --- Função contrói Relogio 1 --------------------------------
  // Reconstrói somente os gráficos não alterando o Dropbox
  function Reloadgauge1() {
@@ -316,18 +354,32 @@
      alert("Erro ao carregar o Relógio! Tente novamente.");
     }
   });
- $.ajax({
-  type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
-  success:
-   function (response) {
-    drawcolunm(response.d);
-    drawtable(response.d);
-   },
-  error:
-   function () {
-    alert("Erro ao carregar Barra e a tabela! Tente novamente.");
-   }
- });
+  $.ajax({
+   type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
+   success:
+    function (response) {
+     drawcolunm(response.d);
+     drawtable(response.d);
+    },
+   error:
+    function () {
+     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
+    }
+  });
  }
 
- </script>
+ // --- Seleção menu operadores  --------------------------------
+  function operadoresselect() {
+   $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    contentType: 'application/json',
+    url: 'Default.aspx/GetDadosGraficoD',
+    data: '{}',
+    success:
+        function (response) {
+         drawoperadores(response.d);
+        }
+   })
+  }
+</script>
