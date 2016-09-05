@@ -1,18 +1,27 @@
-SELECT a.dt_referencia
- ,ROUND((CAST(a.tot_alo AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as alo_acionamento
- ,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.tot_alo AS NUMERIC)*100),2) as cpc_alo
- ,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.tot_cpc AS NUMERIC)*100),2) as venda_cpc
- ,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as cpc_acionamento
- ,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as venda_acionamento
-FROM(
-SELECT 
- CAST(dhreferencia AS DATE)     AS dt_referencia
- ,SUM(fgcontato)       AS tot_alo
- ,SUM(fgcpc)        AS tot_cpc
- ,SUM(fgvenda)       AS tot_venda
- ,COUNT(1)         AS qt_chamadas
-FROM dm_f_acionamento  
-WHERE CAST(dhreferencia AS DATE) >= CURRENT_DATE -30 
-GROUP BY CAST(dhreferencia AS DATE)
-) a 
-ORDER BY a.dt_referencia
+ SELECT CAST(a.dt_referencia AS VARCHAR)
+,ROUND((CAST(a.tot_alo AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as alo_acionamento
+,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.tot_alo AS NUMERIC)*100),2)       as cpc_alo
+,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.tot_cpc AS NUMERIC)*100),2)     as venda_cpc
+,ROUND((CAST(a.tot_cpc AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2)   as cpc_acionamento
+,ROUND((CAST(a.tot_venda AS NUMERIC)/CAST(a.qt_chamadas AS NUMERIC)*100),2) as venda_acionamento
+ FROM(
+ SELECT 
+ CAST(dt_referencia AS DATE)
+,SUM(tot_alo)         As tot_alo
+,SUM(tot_cpc)         As tot_cpc
+,SUM(tot_venda)       As tot_venda
+,SUM(tot_acionamento) As qt_chamadas
+ FROM indicadores.tb_indicadores
+ GROUP BY CAST(dt_referencia As Date)
+ ) a 
+ ORDER BY a.dt_referencia
+
+
+ SELECT CAST(dt_referencia As VARCHAR), hr_referencia, tot_alo, tot_cpc, tot_venda,tot_acionamento, alo_acionamento, 
+ cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento
+ FROM indicadores.tb_indicadores
+
+
+  SELECT CAST(dt_referencia As VARCHAR), hr_referencia, tot_alo, tot_cpc, tot_venda,tot_acionamento, alo_acionamento, 
+  cpc_alo, venda_cpc, cpc_acionamento, venda_acionamento
+  FROM indicadores.tb_indicadores

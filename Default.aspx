@@ -22,6 +22,7 @@
 
  <script type="text/javascript">
   $(function () {
+   // === Ajax carrega as funções em POST BACK ==================================================================================
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}',
     success:
@@ -34,7 +35,7 @@
       alert("Erro ao carregar o Relógio! Tente novamente.");
      }
    });
-   //-----------------------------------------------------------------------------------------------------------------
+   //---------------------------------------------------------------------------------------------------------------------------
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGraficoB', data: '{}',
     success:
@@ -50,7 +51,7 @@
    });
   })
   //============================================================================================================================
-  // --- Popula última atualização -----------------------------
+  // --- Popula última atualização ---------------------------------------------------------------------------------------------
   function ultimaAtualizao(dataValues) {
    i = dataValues.length - 1;
    ultimaatual.innerHTML = 'última atualização em ' + dataValues[i].dt_referencia + ' às ' + dataValues[i].hr_referencia + ' horas';
@@ -141,7 +142,6 @@
    for (var i = 0; i < dataValues.length; i++) {
     //condição SE verifica qual dropbox esta selecionado no momento
     if (dataValues[i].dt_referencia == data.value) {
-     erro.innerHTML = dataValues[i].hr_referencia;
      data3.addRow([
               { v: dataValues[i].hr_referencia, f: dataValues[i].hr_referencia + 'h' },
               dataValues[i].tot_venda,
@@ -201,6 +201,11 @@
    formatter.format(data4, 3); // O numero e referente a coluna
 
    grafico4.draw(data4, comboOptions);
+  }
+  //============================================================================================================================
+  // --- Popula última atualização ---------------------------------------------------------------------------------------------
+  function drawoperadores() {
+
   }
  </script>
 </head>

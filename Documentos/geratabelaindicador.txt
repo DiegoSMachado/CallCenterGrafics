@@ -1,7 +1,7 @@
 DROP TABLE indicadores.tb_indicadores;
 
 CREATE TABLE indicadores.tb_indicadores (
-dt_referencia DATE
+dt_referencia VARCHAR(10)
 ,hr_referencia VARCHAR(2)
 ,tot_alo INT
 ,tot_cpc INT
