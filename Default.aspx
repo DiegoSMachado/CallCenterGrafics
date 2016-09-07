@@ -284,9 +284,9 @@
   <p id="ultimaatual" class="text-muted text-right"></p>
   <ul id="abas" class="nav nav-tabs hidden-print">
    <li role="presentation" class="active"><a href="#">Dashboard</a></li>
-   <li role="presentation">
-    <a onclick="operadoresselect()">
-     <span class="hidden-xs" onclick="operadoresselect()">Operadores</span>
+<!--   <li role="presentation">
+    <a href="#" onclick="selecionoper()">
+     <span class="hidden-xs">Operadores</span>
      <span class="visible-xs-inline">Operad.</span>
     </a>
    </li>
@@ -294,7 +294,7 @@
     <a href="#">
      <span class="hidden-xs">Finalizações do dia</span>
     </a>
-   </li>
+   </li> -->
   </ul>
   <div class="panel-body">
    <div id="panel" class="panel text-center">
@@ -369,17 +369,17 @@
  }
 
  // --- Seleção menu operadores  --------------------------------
-  function operadoresselect() {
+  function selecionoper() {
    $.ajax({
-    type: 'POST',
-    dataType: 'json',
-    contentType: 'application/json',
-    url: 'Default.aspx/GetDadosGraficoD',
-    data: '{}',
+    type: 'POST', dataType: 'json', contentType: 'application/json',  url: 'Default.aspx/GetDadosGraficoC',  data: '{}',
     success:
         function (response) {
          drawoperadores(response.d);
-        }
-   })
+        },
+    error: 
+     function () {
+      erro.innerHTML = 'Erro ao carregar os dados dos Operadores';
+     }
+   });
   }
 </script>
