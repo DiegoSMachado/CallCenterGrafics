@@ -25,12 +25,15 @@
    });
   })
   function drawoperadores(dataValues) {
-   alert(dataValues[0].nm_colaborador);
+   alert(dataValues[0].cd_colaborador);
   }
  </script>
 </head>
 <body>
     <form id="form1" runat="server">
+     <select id="dataselec" runat="server">
+      <option value="2016-08-31">31/08/2016</option>
+     </select>
     <div>
     
     </div>

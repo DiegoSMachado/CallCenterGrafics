@@ -32,7 +32,7 @@
      },
     error:
      function () {
-      alert("Erro ao carregar o Relógio! Tente novamente.");
+      erro.innerHTML = 'Erro ao carregar os dados do Relógio';
      }
    });
    //---------------------------------------------------------------------------------------------------------------------------
@@ -46,15 +46,27 @@
      },
     error:
      function () {
-      alert("Erro ao carregar Barra e a tabela! Tente novamente.");
+      erro.innerHTML = 'Erro ao carregar os dados da Tabela';
      }
    });
   })
   //============================================================================================================================
-  // --- Popula última atualização ---------------------------------------------------------------------------------------------
+  // --- Funções ---------------------------------------------------------------------------------------------
+  function convertedatas(datades) {
+   ano = datades.substring(0, 4);
+   mes = datades.substring(5, 7);
+   dia = datades.substring(8, 10);
+   dataconv = dia + '/' + mes + '/' + ano;
+   return dataconv;
+  }
+  // --- Monta detalhes da página ----------------------------------------------------------------------------
   function ultimaAtualizao(dataValues) {
    i = dataValues.length - 1;
-   ultimaatual.innerHTML = 'última atualização em ' + dataValues[i].dt_referencia + ' às ' + dataValues[i].hr_referencia + ' horas';
+   datades = dataValues[i].dt_referencia;
+   var dataconv = convertedatas(datades);
+   ultimaatual.innerHTML = 'última atualização em ' + dataconv + ' às ' + dataValues[i].hr_referencia + ' horas';
+   dataselecionada.innerHTML = '( ' + dataconv + ' )';
+   titulo.innerHTML = 'Tecnocall';
   }
 
   // --- Popula Dropdown ---------------------------------------
@@ -62,7 +74,9 @@
    data.innerHTML = '';
    //montando o html <option value="xxxx-xx-xx">xxxx-xx-xx</option> de forma decrescente
    for (var i = dataValues.length - 1; i >= 0; i--) {
-    data.innerHTML += '<option value="' + dataValues[i].dt_referencia + '">' + dataValues[i].dt_referencia + '</option>';
+    datades = dataValues[i].dt_referencia;
+    var dataconv = convertedatas(datades);
+    data.innerHTML += '<option value="' + dataValues[i].dt_referencia + '">' + dataconv + '</option>';
    }
   }
   //==========================================================================================================================
@@ -130,6 +144,8 @@
    //Insere os botoes e divs adicionais no painel
    if (document.getElementById('combo') == null) {
     panel.innerHTML += '<h3 class="titulo">Vendas × CPC/Alô</h3><div id="combo" class="comtitulo"></div>'
+    $('#menudash').addClass('active');
+    $('#menuoper').removeClass('active');
    }
    var data3 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
@@ -162,7 +178,7 @@
   function drawtable(dataValues) {
    //Insere os botoes e divs adicionais no painel
    if (document.getElementById('tabela1') == null) {
-    panel.innerHTML += '<div id="tabela1" class="center-block tabela1"></div>'
+    panel.innerHTML += '<div id="tabela1" class="center-block tabela1 col-xs-12 col-lg-12"></div>'
    }
    var data4 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
@@ -205,9 +221,12 @@
   //============================================================================================================================
   // --- Constrói tabela operadores  -------------------------------------------------------------------------------------------
   function drawoperadores(dataValues) {
+
    //Insere os botoes e divs adicionais no painel
    if (document.getElementById('tabela2') == null) {
     panel.innerHTML = '<div id="tabela2" class="center-block"></div>'
+    $('#menuoper').addClass('active');
+    $('#menudash').removeClass('active');
    }
    var data5 = new google.visualization.DataTable();
    // Construção das colunas do DataTable
@@ -221,8 +240,7 @@
    data5.addColumn('number', 'Venda/ CPC');
    // Populando a DataTable
    for (var i = 0; i < dataValues.length; i++) {
-    if (dataValues[i].dt_referencia == data.value) {
-     data4.addRow([
+     data5.addRow([
            dataValues[i].nm_colaborador,
            dataValues[i].tot_acionamento,
            dataValues[i].tot_alo,
@@ -232,7 +250,6 @@
            dataValues[i].tot_venda,
            { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' },
      ]);
-    } else { }
    }
    // Monta a visualização do Google tabela   
    var comboOptions = { allowHtml: true, showRowNumber: false, width: '100%', height: '100%', showRowNumber: true, text: '15px' };
@@ -250,10 +267,11 @@
 <!-- ==================================================================================== -->
 <body>
  <form id="form1" runat="server">
+  <div id="erro" class="alert-warning"></div>
   <div class="navbar navbar-default navbar-fixed-top hidden-print">
    <div class="container-fluid">
     <div class="navbar-header">
-     <a class="navbar-brand no-wrap" href="#" tabindex="-1">Report</a>
+     <a id="titulo" class="navbar-brand no-wrap" href="#" tabindex="-1">Carregando...</a>
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -277,20 +295,21 @@
  <div class="col-xs-12 col-lg-10 col-lg-offset-1">
   <div class="page-header">
    <h1>Hora a Hora
-    <small class="text-muted">ADT - TODAS</small>
-    <small id="dataselecionada" class="text-muted">Carregando</small>
+    <small class="text-muted">ADT - </small>
+    <small id="dataselecionada" class="text-muted">Carregando ...</small>
    </h1>
   </div>
   <p id="ultimaatual" class="text-muted text-right"></p>
   <ul id="abas" class="nav nav-tabs hidden-print">
-   <li role="presentation" class="active"><a href="#">Dashboard</a></li>
-<!--   <li role="presentation">
+   <li id="menudash" role="presentation" class="active">
+    <a href="#" onclick="dataselect()">Dashboard</a></li>
+   <li id="menuoper" role="presentation" class="">
     <a href="#" onclick="selecionoper()">
      <span class="hidden-xs">Operadores</span>
      <span class="visible-xs-inline">Operad.</span>
     </a>
    </li>
-   <li role="presentation">
+<!--   <li role="presentation">
     <a href="#">
      <span class="hidden-xs">Finalizações do dia</span>
     </a>
@@ -300,7 +319,6 @@
    <div id="panel" class="panel text-center">
    </div>
   </div>
-  <div id="erro" class="alert-warning"></div>
  </div>
 </body>
 </html>
@@ -341,8 +359,9 @@
 
  // --- Seleção Dropbox Data  --------------------------------
  function dataselect() {
-  dataselecionada.innerHTML = '( ' + data.value + ' )';
-  erro.innerHTML = 'to dentro';
+  datades = data.value;
+  var dataconv = convertedatas(datades);
+  dataselecionada.innerHTML = '( ' + dataconv + ' )';
   $.ajax({
    type: 'POST', dataType: 'json', contentType: 'application/json', url: 'Default.aspx/GetDadosGrafico', data: '{}',
    success:
@@ -351,7 +370,7 @@
     },
    error:
     function () {
-     alert("Erro ao carregar o Relógio! Tente novamente.");
+     erro.innerHTML = 'Erro ao carregar os dados dos Relógio';
     }
   });
   $.ajax({
@@ -363,13 +382,14 @@
     },
    error:
     function () {
-     alert("Erro ao carregar Barra e a tabela! Tente novamente.");
+     erro.innerHTML = 'Erro ao carregar os dados dos Tabela';
     }
   });
  }
 
  // --- Seleção menu operadores  --------------------------------
-  function selecionoper() {
+ function selecionoper() {
+  dataselecionada.innerHTML = '( Resultado dos últimos 30 dias )';
    $.ajax({
     type: 'POST', dataType: 'json', contentType: 'application/json',  url: 'Default.aspx/GetDadosGraficoC',  data: '{}',
     success:
