@@ -1,12 +1,21 @@
-CREATE TABLE indicadores.tb_indicadores (
-dt_referencia VARCHAR(10)
-,hr_referencia VARCHAR(2)
-,tot_alo INT
-,tot_cpc INT
-,tot_venda INT
-,alo_acionamento NUMERIC(14,2)
-,cpc_alo NUMERIC(14,2)
-,venda_cpc NUMERIC(14,2)
-,cpc_acionamento NUMERIC(14,2)
-,venda_acionamento NUMERIC(14,2)
+-- DROP TABLE indicadores.tb_operadores;
+
+CREATE TABLE indicadores.tb_operadores
+(
+  cd_colaborador character varying,
+  nm_colaborador character varying,
+  tot_alo integer,
+  tot_cpc integer,
+  tot_venda integer,
+  tot_acionamento integer,
+  alo_acionamento numeric(14,2),
+  cpc_alo numeric(14,2),
+  venda_cpc numeric(14,2),
+  cpc_acionamento numeric(14,2),
+  venda_acionamento numeric(14,2)
 )
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE indicadores.tb_operadores
+  OWNER TO postgres;

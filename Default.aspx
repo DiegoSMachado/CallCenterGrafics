@@ -97,8 +97,8 @@
     if (dataValues[i].dt_referencia == data.value) {
      data2.addRow([
           { v: dataValues[i].alo_acionamento, f: dataValues[i].alo_acionamento + '%' },
-          { v: dataValues[i].cpc_acionamento, f: dataValues[i].cpc_alo + '%' },
-          { v: dataValues[i].venda_acionamento, f: dataValues[i].venda_cpc + '%' }
+          { v: dataValues[i].cpc_alo, f: dataValues[i].cpc_alo + '%' },
+          { v: dataValues[i].venda_cpc, f: dataValues[i].venda_cpc + '%' }
      ]);
     }
    }
