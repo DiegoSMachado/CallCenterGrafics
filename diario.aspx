@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="_Default" Debug="true" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="diario.aspx.vb" Inherits="diario" %>
 
 <!DOCTYPE html>
 
@@ -52,6 +52,10 @@
   })
   //============================================================================================================================
   // --- Funções ---------------------------------------------------------------------------------------------
+  function montaPagina() {
+
+  }
+
   function convertedatas(datades) {
    ano = datades.substring(0, 4);
    mes = datades.substring(5, 7);
@@ -59,7 +63,7 @@
    dataconv = dia + '/' + mes + '/' + ano;
    return dataconv;
   }
-  // --- Monta detalhes da página ----------------------------------------------------------------------------
+
   function ultimaAtualizao(dataValues) {
    i = dataValues.length - 1;
    datades = dataValues[i].dt_referencia;
@@ -271,21 +275,12 @@
   <div class="navbar navbar-default navbar-fixed-top hidden-print">
    <div class="container-fluid">
     <div class="navbar-header">
-     <a id="titulo" class="navbar-brand no-wrap" href="#" tabindex="-1">Carregando...</a>
+     <a id="titulo" class="navbar-brand no-wrap" href="#" tabindex="-1">Aguarde estamos carregando os dados, caso demore apertar F5 e aguardar...</a>
     </div>
-
     <div class="collapse navbar-collapse" id="navbar-collapse">
-<!--     <div class="form-group">
-      <label for="id_quebra" class="sr-only">Quebra</label>
-      <select id="id_quebra" name="id" class="form-control" required>
-       <option value="">Carteira / Quebra</option>
-      </select>
-     </div> -->
-
      <div class="form-group">
       <label for="data" class="sr-only">Data</label>
       <select id="data" name="data" class="form-control" onchange="dataselect()">
-       <option value="">Carregando...</option>
       </select>
      </div>
     </div>
@@ -294,9 +289,10 @@
  </form>
  <div class="col-xs-12 col-lg-10 col-lg-offset-1">
   <div class="page-header">
-   <h1>Hora a Hora
+   <h1>
+    Hora a Hora
     <small class="text-muted">ADT - </small>
-    <small id="dataselecionada" class="text-muted">Carregando ...</small>
+    <small id="dataselecionada" class="text-muted"></small>
    </h1>
   </div>
   <p id="ultimaatual" class="text-muted text-right"></p>
@@ -309,11 +305,6 @@
      <span class="visible-xs-inline">Operad.</span>
     </a>
    </li>
-<!--   <li role="presentation">
-    <a href="#">
-     <span class="hidden-xs">Finalizações do dia</span>
-    </a>
-   </li> -->
   </ul>
   <div class="panel-body">
    <div id="panel" class="panel text-center">
@@ -403,3 +394,4 @@
    });
   }
 </script>
+
