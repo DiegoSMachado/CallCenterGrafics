@@ -1,15 +1,44 @@
-﻿@font-face { font-family: glyphicons; src: url('../fonts/glyphicons-halflings-regular.ttf'); } 
-i {font-family: glyphicons}
-#BtLimpar {font-family: glyphicons}
-
-body {
- margin: 0px;
- padding: 0px;
- background-color: white;
- font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+﻿#idquebra {
+ width:200px;
+}
+.form-group {
+ float:left;
+ padding-top:10px;
+ padding-left:10px;
+}
+.btn-primary {
+ padding-top:5px;
+ padding-left:10px;
+ margin-left:10px;
+ margin-top:10px;
+}
+.page-header {
+ margin-top:80px;
 }
 
-h1 {
- color: darkgray;
- margin: 0px;
+#gauge {
+ min-height:200px;
+ max-width:600px;
 }
+
+.comtitulo{
+ margin-top: 0px;
+}
+
+#tabela1{
+ margin-top: 40px;
+}
+
+.titulo {
+ margin-top: 40px;
+ margin-bottom:0px;
+}
+  /* for gauge indicators text */
+  .gauge svg g text {
+    font-size: 18px;
+  }
+  /* for middle text */
+  .gauge svg g g text {
+    font-size: 15px;
+  }
+
