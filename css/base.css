@@ -18,9 +18,8 @@
 
 #gauge {
  min-height:200px;
-width:600px;
+ max-width:600px;
 }
-
 
 .comtitulo{
  margin-top: 0px;
