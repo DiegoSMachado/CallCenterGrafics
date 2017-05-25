@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="_Default" Debug="true" %>
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="diario.aspx.vb" Inherits="diario" Debug="true" %>
 
 <!DOCTYPE html>
 
